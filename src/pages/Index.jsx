@@ -5,7 +5,8 @@ import { FaTaxi } from "react-icons/fa";
 const Index = () => {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
-  const [distance, setDistance] = useState(0);
+  const [distance, setDistance] = useState("");
+  const [distanceUnit, setDistanceUnit] = useState("yards");
   const [extraPassengers, setExtraPassengers] = useState(0);
   const [children, setChildren] = useState(0);
   const [luggage, setLuggage] = useState(0);
@@ -32,17 +33,20 @@ const Index = () => {
       tariff = 1;
     }
 
+    // Convert miles to yards if necessary
+    const calculatedDistance = distanceUnit === "miles" ? parseFloat(distance) * 1760 : parseInt(distance);
+
     // Calculate base fare
     switch (tariff) {
       case 1:
-        fare = 2.6 + Math.ceil((distance - 168) / 168) * 0.2;
+        fare = 2.6 + Math.ceil((calculatedDistance - 168) / 168) * 0.2;
         break;
       case 2:
       case 3:
-        fare = 2.6 + Math.ceil((distance - 130) / 130) * 0.2;
+        fare = 2.6 + Math.ceil((calculatedDistance - 130) / 130) * 0.2;
         break;
       case 4:
-        fare = 5.2 + Math.ceil((distance - 130) / 130) * 0.2;
+        fare = 5.2 + Math.ceil((calculatedDistance - 130) / 130) * 0.2;
         break;
       default:
         fare = 0;
@@ -76,9 +80,15 @@ const Index = () => {
           <FormLabel>Time of Journey</FormLabel>
           <Input type="time" onChange={(e) => setTime(e.target.value)} />
         </FormControl>
-        <FormControl isRequired>
-          <FormLabel>Distance (in yards)</FormLabel>
-          <NumberInput min={0} onChange={(valueString) => setDistance(parseInt(valueString))}>
+        <FormControl as="fieldset" isRequired>
+          <FormLabel>Distance</FormLabel>
+          <RadioGroup defaultValue="yards" mb={4} onChange={(value) => setDistanceUnit(value)}>
+            <Stack direction="row">
+              <Radio value="yards">Yards</Radio>
+              <Radio value="miles">Miles</Radio>
+            </Stack>
+          </RadioGroup>
+          <NumberInput min={0} onChange={(valueString) => setDistance(valueString)}>
             <NumberInputField />
           </NumberInput>
         </FormControl>
