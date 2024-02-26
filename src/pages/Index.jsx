@@ -25,7 +25,9 @@ const Index = () => {
     let tariff;
     if (isChristmasPeriod || isNewYearPeriod || isBoxingDay) {
       tariff = 4;
-    } else if (dateTime.getHours() < 6 || dateTime.getHours() >= 20) {
+    } else if (dateTime.getHours() < 6) {
+      tariff = 3;
+    } else if (dateTime.getHours() >= 20) {
       tariff = 2;
     } else {
       tariff = 1;
