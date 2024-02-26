@@ -25,9 +25,9 @@ const Index = () => {
     let tariff;
     if (isChristmasPeriod || isNewYearPeriod || isBoxingDay) {
       tariff = 4;
-    } else if (dateTime.getHours() < 6) {
+    } else if (dateTime.getHours() >= 0 && dateTime.getHours() < 6) {
       tariff = 3;
-    } else if (dateTime.getHours() >= 20) {
+    } else if (dateTime.getHours() >= 20 && dateTime.getHours() < 24) {
       tariff = 2;
     } else {
       tariff = 1;
@@ -43,7 +43,7 @@ const Index = () => {
         break;
       case 2:
       case 3:
-        fare = 3.2 + Math.ceil((calculatedDistance - 130) / 130) * 0.2;
+        fare = 3.2 + (Math.ceil(calculatedDistance / 130) - 1) * 0.2;
         break;
       case 4:
         fare = 5.2 + Math.ceil((calculatedDistance - 130) / 130) * 0.2;
