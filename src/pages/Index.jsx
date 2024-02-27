@@ -27,7 +27,7 @@ const Index = () => {
       tariff = 4;
     } else if (isBankHoliday || dateTime.getDay() === 0 || dateTime.getDay() === 6 || (dateTime.getHours() >= 21 && dateTime.getHours() <= 23)) {
       tariff = 2;
-    } else if (dateTime.getHours() >= 0 && dateTime.getHours() < 6) {
+    } else if (dateTime.getHours() >= 0 && dateTime.getHours() <= 5) {
       tariff = 3;
     } else {
       tariff = 1;
