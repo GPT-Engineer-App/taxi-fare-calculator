@@ -25,11 +25,10 @@ const Index = () => {
     let tariff;
     if (isChristmasPeriod || isNewYearPeriod || isBoxingDay) {
       tariff = 4;
-    } else if (dateTime.getHours() >= 21 && dateTime.getHours() <= 23) {
+    } else if (isBankHoliday || dateTime.getDay() === 0 || dateTime.getDay() === 6 || (dateTime.getHours() >= 21 && dateTime.getHours() <= 23)) {
       tariff = 2;
     } else if (dateTime.getHours() >= 0 && dateTime.getHours() < 6) {
       tariff = 3;
-    } else if (isBankHoliday || dateTime.getDay() === 0 || dateTime.getDay() === 6) {
       tariff = 2;
     } else if (dateTime.getHours() >= 0 && dateTime.getHours() < 6) {
       tariff = 3;
