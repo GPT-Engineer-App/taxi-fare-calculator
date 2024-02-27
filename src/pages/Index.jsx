@@ -14,7 +14,7 @@ const Index = () => {
   const [soiled, setSoiled] = useState(false);
   const [costPerMile, setCostPerMile] = useState(0);
 
-  const calculateFare = () => {
+  const calculateFare = (excludeStartPrice = false) => {
     let fare;
     const dateTime = new Date(`${date}T${time}`);
     const isChristmasPeriod = dateTime.getMonth() === 11 && (dateTime.getDate() === 24 || dateTime.getDate() === 31);
@@ -37,24 +37,22 @@ const Index = () => {
     // Convert miles to yards if necessary
     const calculatedDistance = distanceUnit === "miles" ? parseFloat(distance) * 1760 : parseInt(distance);
 
-    // Calculate base fare
-    switch (tariff) {
-      case 1:
-        fare = 2.6 + Math.ceil((calculatedDistance - 168) / 168) * 0.2;
-        break;
-      case 2:
-        fare = 2.6 + Math.ceil((calculatedDistance - 130) / 130) * 0.2;
-        break;
-      case 3:
-        fare = 3.2 + Math.ceil((calculatedDistance - 130) / 130) * 0.2;
-        break;
-      case 4:
-        fare = 5.2 + Math.ceil((calculatedDistance - 130) / 130) * 0.2;
-        break;
-      default:
-        fare = 0;
-        break;
-    }
+    const startPrice = {
+      1: 2.6,
+      2: 2.6,
+      3: 3.2,
+      4: 5.2,
+    };
+    const startDistance = {
+      1: 168,
+      2: 130,
+      3: 130,
+      4: 130,
+    };
+
+    // Calculate base fare excluding the start price if requested
+    const baseFare = Math.ceil((calculatedDistance - startDistance[tariff]) / startDistance[tariff]) * 0.2;
+    fare = excludeStartPrice ? baseFare : startPrice[tariff] + baseFare;
 
     // Add extras
     fare += extraPassengers * 0.3;
@@ -66,18 +64,20 @@ const Index = () => {
     return fare.toFixed(2);
   };
 
-  const calculateCostPerMile = () => {
+  const calculateCostPerMile = (excludeStartPrice = false) => {
     if (distance && distanceUnit) {
       const miles = distanceUnit === "miles" ? parseFloat(distance) : parseFloat(distance) / 1760;
+      const totalFare = parseFloat(calculateFare());
+      const fareWithoutStartPrice = parseFloat(calculateFare(true));
       if (miles > 0) {
-        const cost = calculateFare() / miles;
+        const cost = excludeStartPrice ? (totalFare - fareWithoutStartPrice) / miles : totalFare / miles;
         setCostPerMile(cost.toFixed(2));
       }
     }
   };
 
   useEffect(() => {
-    calculateCostPerMile();
+    calculateCostPerMile(true);
   }, [distance, distanceUnit]);
 
   return (
