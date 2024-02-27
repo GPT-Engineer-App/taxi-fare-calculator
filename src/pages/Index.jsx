@@ -29,9 +29,6 @@ const Index = () => {
       tariff = 2;
     } else if (dateTime.getHours() >= 0 && dateTime.getHours() < 6) {
       tariff = 3;
-      tariff = 2;
-    } else if (dateTime.getHours() >= 0 && dateTime.getHours() < 6) {
-      tariff = 3;
     } else {
       tariff = 1;
     }
@@ -45,6 +42,8 @@ const Index = () => {
         fare = 2.6 + Math.ceil((calculatedDistance - 168) / 168) * 0.2;
         break;
       case 2:
+        fare = 2.6 + Math.ceil((calculatedDistance - 130) / 130) * 0.2;
+        break;
       case 3:
         fare = 3.2 + Math.ceil((calculatedDistance - 130) / 130) * 0.2;
         break;
