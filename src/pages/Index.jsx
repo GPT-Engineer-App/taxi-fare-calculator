@@ -1,5 +1,5 @@
 import { Box, Button, Container, FormControl, FormLabel, Input, NumberInput, NumberInputField, Radio, RadioGroup, Stack, Text } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaTaxi } from "react-icons/fa";
 
 const Index = () => {
@@ -12,6 +12,7 @@ const Index = () => {
   const [luggage, setLuggage] = useState(0);
   const [cycles, setCycles] = useState(0);
   const [soiled, setSoiled] = useState(false);
+  const [costPerMile, setCostPerMile] = useState(0);
 
   const calculateFare = () => {
     let fare;
@@ -65,13 +66,34 @@ const Index = () => {
     return fare.toFixed(2);
   };
 
+  const calculateCostPerMile = () => {
+    if (distance && distanceUnit) {
+      const miles = distanceUnit === "miles" ? parseFloat(distance) : parseFloat(distance) / 1760;
+      if (miles > 0) {
+        const cost = calculateFare() / miles;
+        setCostPerMile(cost.toFixed(2));
+      }
+    }
+  };
+
+  useEffect(() => {
+    calculateCostPerMile();
+  }, [distance, distanceUnit]);
+
   return (
     <Container maxW="container.md" py={10}>
-      <Box textAlign="center">
-        <FaTaxi size="3rem" />
-        <Text fontSize="2xl" fontWeight="bold" mb={6}>
-          Taxi Tariff Calculator
-        </Text>
+      <Box textAlign="center" display="flex" justifyContent="space-between">
+        <Box>
+          <FaTaxi size="3rem" />
+          <Text fontSize="2xl" fontWeight="bold" mb={6}>
+            Taxi Tariff Calculator
+          </Text>
+        </Box>
+        <Box>
+          <Text fontSize="xl" fontWeight="bold">
+            {`Cost per Mile: £${costPerMile}`}
+          </Text>
+        </Box>
       </Box>
       <Stack spacing={4}>
         <FormControl isRequired>
